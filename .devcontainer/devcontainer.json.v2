@@ -1,0 +1,21 @@
+{
+  "name": "ASP.NET + Angular",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    }
+  },
+  
+  "forwardPorts": [5000, 4200],
+  
+  // Install tools and dependencies ONCE during build
+  "postCreateCommand": "npm install -g @angular/cli && dotnet restore && cd Frontend && npm install",
+  
+  // Start the servers every time you connect
+  // Using 'nohup' and '&' to ensure they run in the background without blocking the terminal
+  "postAttachCommand": "nohup bash -c 'cd Backend && dotnet run --urls http://0.0.0.0:5000 & cd Frontend && ng serve --host 0.0.0.0 --port 4200 &' > devcontainer_start.log 2>&1",
+  
+  "remoteUser": "vscode"
+}

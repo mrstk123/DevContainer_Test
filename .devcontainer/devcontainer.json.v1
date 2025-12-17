@@ -1,0 +1,21 @@
+{
+  "name": "ASP.NET + Angular",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    }
+  },
+  
+  "forwardPorts": [5000, 4200],
+  
+  "postCreateCommand": "npm install -g @angular/cli && dotnet restore && cd Frontend && npm install",
+  
+  "postAttachCommand": {
+    "dotnet": "cd Backend && echo 'Starting .NET...' && dotnet run --urls 'http://0.0.0.0:5000'",
+    "angular": "cd Frontend && echo 'Starting Angular...' && ng serve --host 0.0.0.0 --port 4200"
+  },
+
+"remoteUser": "vscode"
+}
