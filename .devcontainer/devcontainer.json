@@ -14,6 +14,7 @@
   "postCreateCommand": "npm install -g @angular/cli && dotnet restore && cd Frontend && npm install",
   
   // Start the servers every time you connect
+  // downside of sh: Logs are hidden (unless you check a log file or run ps)
   "postAttachCommand": "bash ./start-dev.sh",
 
   "remoteUser": "vscode"
