@@ -1,0 +1,44 @@
+{
+  // VS Code Tasks: Instead of one background process, you will get two separate, labeled terminal tabs that you can watch, restart, or debug individually.
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "run-backend",
+      "type": "shell",
+      "command": "dotnet run --urls http://0.0.0.0:5000",
+      "options": {
+        "cwd": "${workspaceFolder}/Backend"
+      },
+      "presentation": {
+        "group": "dev-servers",
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "isBackground": true,
+      "problemMatcher": ["$msCompile"]
+    },
+    {
+      "label": "run-frontend",
+      "type": "shell",
+      // Using 'npx' ensures the 'ng' command is found in node_modules
+      "command": "npx ng serve --host 0.0.0.0 --port 4200",
+      "options": {
+        "cwd": "${workspaceFolder}/Frontend"
+      },
+      "presentation": {
+        "group": "dev-servers",
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "isBackground": true,
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "start-all",
+      "dependsOn": ["run-backend", "run-frontend"],
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}

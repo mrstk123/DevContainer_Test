@@ -4,18 +4,15 @@
   
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "24"
+      "version": "24" 
     }
   },
   
   "forwardPorts": [5000, 4200],
   
-  // Install tools and dependencies ONCE during build
-  "postCreateCommand": "npm install -g @angular/cli && dotnet restore && cd Frontend && npm install",
-  
-  // Start the servers every time you connect
-  // downside of sh: Logs are hidden (unless you check a log file or run ps)
-  "postAttachCommand": "bash ./start-dev.sh",
+  // Cleanly install everything. Note: No need for -g if we use npx in tasks.
+  // npx is generally preferred in Docker rather than angular cli
+  "postCreateCommand": "dotnet restore && cd Frontend && npm install",
 
   "remoteUser": "vscode"
 }
