@@ -1,5 +1,7 @@
 {
-  // VS Code Tasks: Instead of one background process, you will get two separate, labeled terminal tabs that you can watch, restart, or debug individually.
+  // Canonical way to run the stack: Task "start-all" runs on folder open and
+  // gives each server its own labeled terminal you can watch/restart individually.
+  // The Angular dev server proxies /api requests to the backend (Frontend/proxy.conf.json).
   "version": "2.0.0",
   "tasks": [
     {
@@ -12,15 +14,32 @@
       "presentation": {
         "group": "dev-servers",
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "clear": true
       },
       "isBackground": true,
-      "problemMatcher": ["$msCompile"]
+      "problemMatcher": {
+        "owner": "dotnet",
+        "pattern": {
+          "regexp": "^(.*)\\((\\d+),(\\d+)\\):\\s+(error|warning)\\s+([A-Z]+\\d+)?\\s*:?\\s*(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "^\\s*Now listening on:"
+        }
+      }
     },
     {
       "label": "run-frontend",
       "type": "shell",
-      // Using 'npx' ensures the 'ng' command is found in node_modules
+      // Uses the local `ng` from Frontend/node_modules (no global install needed)
       "command": "npx ng serve --host 0.0.0.0 --port 4200",
       "options": {
         "cwd": "${workspaceFolder}/Frontend"
@@ -28,14 +47,32 @@
       "presentation": {
         "group": "dev-servers",
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "clear": true
       },
       "isBackground": true,
-      "problemMatcher": ["$tsc"]
+      "problemMatcher": {
+        "owner": "angular",
+        "pattern": {
+          "regexp": "^(?:ERROR in )?(.*):(\\d+):(\\d+):\\s*(error|warning)[^:]*:\\s*(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": ".*(Application bundle generation complete|Local:)"
+        }
+      }
     },
     {
       "label": "start-all",
+      "dependsOrder": "parallel",
       "dependsOn": ["run-backend", "run-frontend"],
+      "problemMatcher": [],
       "runOptions": {
         "runOn": "folderOpen"
       }

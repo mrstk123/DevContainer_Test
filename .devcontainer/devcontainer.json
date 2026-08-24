@@ -1,18 +1,39 @@
 {
   "name": "ASP.NET + Angular",
   "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
-  
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "24" 
+      "version": "24"
     }
   },
-  
-  "forwardPorts": [5000, 4200],
-  
-  // Cleanly install everything. Note: No need for -g if we use npx in tasks.
-  // npx is generally preferred in Docker rather than angular cli
-  "postCreateCommand": "dotnet restore && cd Frontend && npm install",
-
+  "forwardPorts": [
+    5000,
+    4200
+  ],
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/Frontend/node_modules,type=volume"
+  ],
+  "portsAttributes": {
+    "5000": {
+      "label": "Backend API",
+      "onAutoForward": "notify"
+    },
+    "4200": {
+      "label": "Angular Dev Server",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  // Restore dependencies once. The Angular CLI is not installed globally;
+  // tasks and scripts use the local `ng` from node_modules.
+  "postCreateCommand": "sudo chown -R vscode Frontend/node_modules && dotnet restore && cd Frontend && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "Angular.ng-template",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
   "remoteUser": "vscode"
 }
