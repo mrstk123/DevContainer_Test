@@ -1,3 +1,32 @@
-.DS_Store
+# Build outputs
 Backend/bin/
 Backend/obj/
+Frontend/dist/
+Frontend/tmp/
+Frontend/out-tsc/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Angular
+.angular/
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+devcontainer_start.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.idea/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
