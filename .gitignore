@@ -20,6 +20,9 @@ coverage/
 *.log
 devcontainer_start.log
 
+# Secrets (per-developer connection strings etc.)
+.devcontainer/.env
+
 # OS files
 .DS_Store
 Thumbs.db

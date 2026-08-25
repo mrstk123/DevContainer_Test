@@ -1,6 +1,10 @@
 {
   "name": "ASP.NET + Angular",
   "image": "mcr.microsoft.com/devcontainers/dotnet:10.0",
+
+  // Load per-developer secrets (DB connection strings, etc.) from a local,
+  // git-ignored env file. See .env.example. Applies on (re)build/reopen.
+  "runArgs": ["--env-file", ".devcontainer/.env"],
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "24"

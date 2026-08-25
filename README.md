@@ -43,6 +43,33 @@ Browser → http://localhost:4200/api/weatherforecast
 | `GET /api/weatherforecast` | Sample weather data              |
 | `GET /openapi/v1.json` | OpenAPI document (Development only)  |
 
+## Database (Postgres)
+
+The backend connects to a Postgres container running on the host via Docker.
+Connection details are **not committed** — each developer keeps them in
+`.devcontainer/.env` (git-ignored):
+
+```bash
+cp .devcontainer/.env.example .devcontainer/.env   # then fill in the password
+```
+
+The file is injected into the dev container as environment variables
+(`runArgs: --env-file`) and read by the backend as `ConnectionStrings:Default`.
+It takes effect on the next **Reopen/Rebuild Container**.
+
+Check connectivity at any time via `GET /health`, which includes a live
+Postgres `SELECT 1` check (`Unhealthy` when no connection string is set up or the DB is down).
+
+### Where the connection string comes from
+
+| Where the backend runs | Source of `ConnectionStrings:Default` |
+| ---------------------- | ------------------------------------- |
+| Inside dev container   | `.devcontainer/.env` (injected via `runArgs`) — uses `host.docker.internal`, overrides appsettings |
+| Local VS Code / host   | `Backend/appsettings.Development.json` — uses `localhost` |
+
+Precedence: environment variables (container) override appsettings, so no
+manual switching is needed between the two environments.
+
 ## Common commands
 
 ```bash

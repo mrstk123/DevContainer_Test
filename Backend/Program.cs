@@ -1,9 +1,36 @@
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Npgsql;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddHealthChecks();
+
+// Postgres connection string comes from the environment (see .devcontainer/.env,
+// injected via devcontainer.json runArgs). The app still boots when it is absent
+// or unreachable — /health then reports the DB as unhealthy.
+var connectionString = builder.Configuration.GetConnectionString("Default");
+
+builder.Services.AddHealthChecks()
+    .AddAsyncCheck("postgres", async cancellationToken =>
+    {
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            return HealthCheckResult.Unhealthy("ConnectionStrings:Default is not configured.");
+        }
+
+        try
+        {
+            await using var connection = new NpgsqlConnection(connectionString);
+            await connection.OpenAsync(cancellationToken);
+            return HealthCheckResult.Healthy();
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy(ex.Message);
+        }
+    }, tags: ["ready"]);
 
 var app = builder.Build();
 

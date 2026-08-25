@@ -39,8 +39,11 @@
     {
       "label": "run-frontend",
       "type": "shell",
-      // Uses the local `ng` from Frontend/node_modules (no global install needed)
-      "command": "npx ng serve --host 0.0.0.0 --port 4200",
+      // Uses the local `ng` from Frontend/node_modules (no global install needed).
+      // The `npm install` guard makes the first-ever container start work even if
+      // this task races the postCreateCommand: it is a near-instant no-op when
+      // node_modules is already populated, and installs deps otherwise.
+      "command": "npm install --no-audit --no-fund --loglevel=error && npx ng serve --host 0.0.0.0 --port 4200",
       "options": {
         "cwd": "${workspaceFolder}/Frontend"
       },
